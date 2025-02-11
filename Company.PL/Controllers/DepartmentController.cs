@@ -1,7 +1,7 @@
-﻿using Company.BLL.Interfaces;
+﻿using Microsoft.AspNetCore.Mvc;
 using Company.BLL.Repositories;
+using Company.BLL.Interfaces;
 using Company.DAL.Models;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace Company.PL.Controllers
@@ -32,7 +32,11 @@ namespace Company.PL.Controllers
             {
                 try
                 {
-                    _departmentRepository.Add(department);
+                    var result = _departmentRepository.Add(department);
+
+                    if(result >  0)
+                        TempData["message"] = "Department is created";
+
                     return RedirectToAction(nameof(Index));
                 }
                 catch (System.Exception ex)

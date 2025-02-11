@@ -10,36 +10,45 @@ using System.Threading.Tasks;
 
 namespace Company.BLL.Repositories
 {
-    public class DepartmentRepository : IDepartmentRepository
+    public class DepartmentRepository : GenericRepository<Department> ,IDepartmentRepository
     {
-        private readonly CompanyAppDbContext dbContext;
-
-        public DepartmentRepository(CompanyAppDbContext dbContext) // Asking CLR to create object from DbContext (Dependency Injection)
+        public DepartmentRepository(CompanyAppDbContext dbContext):base(dbContext) // CLR injects an object from DbContext then chain it to base (one object created in department for example)
         {
-            this.dbContext = dbContext;
-        }
-        public int Add(Department department)
-        {
-            dbContext.Add(department);
-            return dbContext.SaveChanges();
         }
 
-        public int Delete(Department department)
-        {
-            dbContext.Remove(department);
-            return dbContext.SaveChanges();
-        }
+        #region MyRegion
+        //public class DepartmentRepository : IDepartmentRepository
+        //{
+        //    private readonly CompanyAppDbContext dbContext;
 
-        public IEnumerable<Department> GetAll()
-            => dbContext.Departments.ToList();
+        //    public DepartmentRepository(CompanyAppDbContext dbContext) // Asking CLR to create object from DbContext (Dependency Injection)
+        //    {
+        //        this.dbContext = dbContext;
+        //    }
+        //    public int Add(Department department)
+        //    {
+        //        dbContext.Add(department);
+        //        return dbContext.SaveChanges();
+        //    }
 
-        public Department GetById(int Id)
-            => dbContext.Departments.Find(Id);
+        //    public int Delete(Department department)
+        //    {
+        //        dbContext.Remove(department);
+        //        return dbContext.SaveChanges();
+        //    }
 
-        public int Update(Department department)
-        {
-            dbContext.Update(department);
-            return dbContext.SaveChanges();
-        }
+        //    public IEnumerable<Department> GetAll()
+        //        => dbContext.Departments.ToList();
+
+        //    public Department GetById(int Id)
+        //        => dbContext.Departments.Find(Id);
+
+        //    public int Update(Department department)
+        //    {
+        //        dbContext.Update(department);
+        //        return dbContext.SaveChanges();
+        //    }
+        //}
+        #endregion
     }
 }

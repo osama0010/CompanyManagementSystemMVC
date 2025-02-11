@@ -9,37 +9,17 @@ using System.Threading.Tasks;
 
 namespace Company.BLL.Repositories
 {
-    public class EmployeeRepository : IEmployeeRepository
+    public class EmployeeRepository : GenericRepository<Employee> ,IEmployeeRepository
     {
-        private readonly CompanyAppDbContext _dbContext;
+        private readonly CompanyAppDbContext dbContext;
 
-        public EmployeeRepository(CompanyAppDbContext dbContext) // Ask CLR to create an object from DbContext
+        public EmployeeRepository(CompanyAppDbContext dbContext):base(dbContext) // CLR injects an object from DbContext then chain it to base (one object created in Employee and passed as parameter to GenericRepo)
         {
-            _dbContext = dbContext;
-        }
-        public int Add(Employee employee)
-        {
-            _dbContext.Add(employee);
-            return _dbContext.SaveChanges();
+            this.dbContext = dbContext;
         }
 
-        public int Delete(Employee employee)
-        {
-            _dbContext.Add(employee);
-            return _dbContext.SaveChanges();
-        }
+        public IQueryable<Employee> GetEmployeeByName(string name)
+            => dbContext.Employees.Where(E => E.Name == name);
 
-        public IEnumerable<Employee> GetAll()
-            => _dbContext.Employees.ToList();
-
-        public Employee GetById(int Id)
-            => _dbContext.Employees.Find(Id);
-
-
-        public int Update(Employee employee)
-        {
-            _dbContext.Update(employee);
-            return _dbContext.SaveChanges();
-        }
     }
 }

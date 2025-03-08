@@ -1,28 +1,29 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
+﻿using Company.DAL.Models;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.ComponentModel.DataAnnotations;
+using System;
 
-namespace Company.DAL.Models
+namespace Company.PL.ViewModels
 {
-    public class Employee
+    public class EmployeeViewModel
     {
         public int Id { get; set; }
-        [Required]
-        [MaxLength(50)]
+        [Required(ErrorMessage = "Name Is Required")]
+        [MaxLength(50, ErrorMessage = "Max Length is 50 characters")]
+        [MinLength(5, ErrorMessage = "Min Length is 5 characters")]
         public string Name { get; set; }
         public int? Age { get; set; }
-
+        [RegularExpression("^[0-9]{1,3}-[a-zA-Z]{5,10}-[a-zA-Z]{4,10}-[a-zA-Z]{5,10}$",
+            ErrorMessage = "Address must be in the format of 123-Street-City-Country")]
         public string Address { get; set; }
+        [DataType(DataType.Currency)]
         public decimal Salary { get; set; }
         public bool IsActive { get; set; }
+        [EmailAddress]
         public string Email { get; set; }
+        [Phone]
         public string PhoneNumber { get; set; }
         public DateTime HireDate { get; set; }
-        public DateTime CreationDate { get; set; } = DateTime.Now;
 
         [ForeignKey("Department")]
         public int? DepartmentId { get; set; } // FK
@@ -30,6 +31,5 @@ namespace Company.DAL.Models
         // Fk Required => OnDelete = Cascade
         [InverseProperty("employees")]
         public Department department { get; set; }
-
     }
 }

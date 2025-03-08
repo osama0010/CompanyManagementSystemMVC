@@ -1,7 +1,9 @@
-﻿@model Employee
+﻿@using Company.BLL.Interfaces
+@model EmployeeViewModel
+@inject IDepartmentRepository DepartmentRepository
 
 @{
-    var departments = new SelectList(ViewBag.departments, "Id", "Name");
+    var departments = new SelectList(DepartmentRepository.GetAll(), "Id", "Name");
 }
 
 <div class="form-group">
@@ -25,7 +27,6 @@
     <select class="form-control" asp-items="@departments" asp-for="DepartmentId">
         <option value="@null">------ Select Department -------</option>
     </select>
-    <span asp-validation-for="Salary" class="text-danger"></span>
 </div>
 
 <div class="form-group">

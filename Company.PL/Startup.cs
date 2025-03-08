@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Company.BLL.Interfaces;
 using Company.BLL.Repositories;
 using Company.DAL.Contexts;
+using Company.PL.MappingProfiles;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -34,6 +35,9 @@ namespace Company.PL
             }); // Allow Dependency Injection
             services.AddScoped<IDepartmentRepository, DepartmentRepository>(); // Allow Dependency Injection for class DepartmentRepo
             services.AddScoped<IEmployeeRepository, EmployeeRepository>();
+            services.AddAutoMapper(M => M.AddProfile(new EmployeeProfile()));
+
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

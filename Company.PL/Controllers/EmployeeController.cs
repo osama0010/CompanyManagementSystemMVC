@@ -11,16 +11,13 @@ namespace Company.PL.Controllers
 {
     public class EmployeeController : Controller
     {
-        private readonly IEmployeeRepository _employeeRepository;
-        private readonly IDepartmentRepository _departmentRepository;
+        private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
 
-        public EmployeeController(IEmployeeRepository employeeRepository,
-                                    IDepartmentRepository departmentRepository,
-                                    IMapper mapper) // Ask CLR for creating object from class implementing IEmployeeRepo and IDepartmentRepo
+        public EmployeeController(IUnitOfWork unitOfWork,// Ask CLR for creating object from class implementing IUnitOfWork
+                        IMapper mapper)
         {
-            _employeeRepository = employeeRepository;
-            _departmentRepository = departmentRepository;
+            _unitOfWork = unitOfWork;
             _mapper = mapper;
         }
         public IActionResult Index(string SearchValue)
@@ -28,10 +25,10 @@ namespace Company.PL.Controllers
             IEnumerable<Employee> employees;
 
             if (string.IsNullOrEmpty(SearchValue))
-                employees = _employeeRepository.GetAll();
+                employees = _unitOfWork.EmployeeRepository.GetAll();
 
             else
-                employees = _employeeRepository.GetEmployeeByName(SearchValue);
+                employees = _unitOfWork.EmployeeRepository.GetEmployeeByName(SearchValue);
 
             var mappedEmployees = _mapper.Map<IEnumerable<Employee>, IEnumerable<EmployeeViewModel>>(employees);
             return View(mappedEmployees);
@@ -52,12 +49,8 @@ namespace Company.PL.Controllers
                 try
                 {
                     var mappedEmployee = _mapper.Map<EmployeeViewModel, Employee>(employeeVM);
-
-                    var result = _employeeRepository.Add(mappedEmployee);
-
-                    if (result > 0)
-                        TempData["message"] = "Employee is created";
-
+                    _unitOfWork.EmployeeRepository.Add(mappedEmployee);
+                    _unitOfWork.Complete();
                     return RedirectToAction(nameof(Index));
                 }
                 catch (System.Exception ex)
@@ -75,7 +68,7 @@ namespace Company.PL.Controllers
             if (id is null)
                 return BadRequest();
 
-            var employee = _employeeRepository.GetById(id.Value);
+            var employee = _unitOfWork.EmployeeRepository.GetById(id.Value);
 
             if (employee is null)
                 return NotFound();
@@ -87,7 +80,7 @@ namespace Company.PL.Controllers
 
         public IActionResult Edit(int? id)
         {
-            ViewBag.departments = _departmentRepository.GetAll();
+            ViewBag.departments = _unitOfWork.EmployeeRepository.GetAll();
             return Details(id, "Edit");
         }
 
@@ -103,7 +96,8 @@ namespace Company.PL.Controllers
                 {
                     var mappedEmployee = _mapper.Map<EmployeeViewModel, Employee>(employeeVM);
 
-                    _employeeRepository.Update(mappedEmployee);
+                    _unitOfWork.EmployeeRepository.Update(mappedEmployee);
+                    _unitOfWork.Complete();
                     return RedirectToAction(nameof(Index));
                 }
                 catch (System.Exception ex)
@@ -113,7 +107,7 @@ namespace Company.PL.Controllers
                     ModelState.AddModelError(string.Empty, ex.Message);
                 }
             }
-            ViewBag.departments = _departmentRepository.GetAll();
+            ViewBag.departments = _unitOfWork.EmployeeRepository.GetAll();
             return View(employeeVM);
         }
 
@@ -132,7 +126,8 @@ namespace Company.PL.Controllers
                 {
                     var mappedEmployee = _mapper.Map<EmployeeViewModel, Employee>(employeeVM);
 
-                    _employeeRepository.Delete(mappedEmployee);
+                    _unitOfWork.EmployeeRepository.Delete(mappedEmployee);
+                    _unitOfWork.Complete();
                     return RedirectToAction(nameof(Index));
                 }
                 catch (Exception ex)

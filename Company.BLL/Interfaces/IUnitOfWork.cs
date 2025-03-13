@@ -6,12 +6,14 @@ using System.Threading.Tasks;
 
 namespace Company.BLL.Interfaces
 {
-    internal interface IUnitOfWork
+    public interface IUnitOfWork
     {
         // Signature For Property For Each and Every Repository interface
 
         public IEmployeeRepository EmployeeRepository { get; set; }
         public IDepartmentRepository DepartmentRepository { get; set; }
+
+        int Complete();
 
     }
 }

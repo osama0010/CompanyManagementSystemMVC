@@ -12,7 +12,7 @@ namespace Company.BLL.Repositories
 {
     public class DepartmentRepository : GenericRepository<Department> ,IDepartmentRepository
     {
-        public DepartmentRepository(CompanyAppDbContext dbContext):base(dbContext) // CLR injects an object from DbContext then chain it to base (one object created in department for example)
+        public DepartmentRepository(CompanyAppDbContext dbContext):base(dbContext)
         {
         }
 

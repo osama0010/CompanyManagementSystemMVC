@@ -33,8 +33,10 @@ namespace Company.PL
             {
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
             }); // Allow Dependency Injection
+
             services.AddScoped<IDepartmentRepository, DepartmentRepository>(); // Allow Dependency Injection for class DepartmentRepo
-            services.AddScoped<IEmployeeRepository, EmployeeRepository>();
+            //services.AddScoped<IEmployeeRepository, EmployeeRepository>();
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddAutoMapper(M => M.AddProfile(new EmployeeProfile()));
 
 

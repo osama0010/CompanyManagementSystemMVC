@@ -15,7 +15,7 @@ namespace Company.BLL.Repositories
     {
         private readonly CompanyAppDbContext dbContext;
 
-        public EmployeeRepository(CompanyAppDbContext dbContext):base(dbContext) // CLR injects an object from DbContext then chain it to base (one object created in Employee and passed as parameter to GenericRepo)
+        public EmployeeRepository(CompanyAppDbContext dbContext):base(dbContext) 
         {
             this.dbContext = dbContext;
         }

@@ -5,14 +5,18 @@ using System.Threading.Tasks;
 using Company.BLL.Interfaces;
 using Company.BLL.Repositories;
 using Company.DAL.Contexts;
+using Company.DAL.Models;
 using Company.PL.MappingProfiles;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Options;
 
 namespace Company.PL
 {
@@ -39,6 +43,20 @@ namespace Company.PL
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddAutoMapper(M => M.AddProfile(new EmployeeProfile()));
 
+            services.AddIdentity<ApplicationUser, IdentityRole>(options =>
+            {
+                options.Password.RequireNonAlphanumeric = true;
+                options.Password.RequireDigit = true;
+                options.Password.RequireLowercase = true;
+                options.Password.RequireUppercase = true;
+            })
+                        .AddEntityFrameworkStores<CompanyAppDbContext>();
+
+            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(Options =>
+            {
+                Options.LoginPath = "Account/Login";
+                Options.AccessDeniedPath = "Home/Error";
+            });
 
         }
 
@@ -60,13 +78,14 @@ namespace Company.PL
 
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller=Home}/{action=Index}/{id?}");
+                    pattern: "{controller=Account}/{action=Login}/{id?}");
             });
         }
     }

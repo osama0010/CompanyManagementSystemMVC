@@ -1,4 +1,6 @@
 ﻿using Company.DAL.Models;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -8,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Company.DAL.Contexts
 {
-    public class CompanyAppDbContext : DbContext
+    public class CompanyAppDbContext : IdentityDbContext<ApplicationUser>
     {
 
         public CompanyAppDbContext(DbContextOptions<CompanyAppDbContext> options):base(options)
@@ -21,6 +23,7 @@ namespace Company.DAL.Contexts
 
         public DbSet<Department> Departments { get; set; }
         public DbSet<Employee> Employees { get; set; }
+
 
     }
 }

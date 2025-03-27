@@ -22,9 +22,9 @@ namespace Company.BLL.Repositories
             _dbContext = dbContext;
         }
 
-        public int Complete()
+        public async Task<int> CompleteAsync()
         {
-            return _dbContext.SaveChanges();
+            return await _dbContext.SaveChangesAsync();
         }
 
         public void Dispose()

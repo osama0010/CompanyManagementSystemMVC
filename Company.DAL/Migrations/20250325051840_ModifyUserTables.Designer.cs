@@ -4,14 +4,16 @@ using Company.DAL.Contexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Company.DAL.Migrations
 {
     [DbContext(typeof(CompanyAppDbContext))]
-    partial class CompanyAppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250325051840_ModifyUserTables")]
+    partial class ModifyUserTables
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

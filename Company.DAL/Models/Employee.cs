@@ -15,7 +15,6 @@ namespace Company.DAL.Models
         [MaxLength(50)]
         public string Name { get; set; }
         public int? Age { get; set; }
-
         public string Address { get; set; }
         public decimal Salary { get; set; }
         public bool IsActive { get; set; }
@@ -23,6 +22,7 @@ namespace Company.DAL.Models
         public string PhoneNumber { get; set; }
         public DateTime HireDate { get; set; }
         public DateTime CreationDate { get; set; } = DateTime.Now;
+        public string ImageName { get; set; }
 
         [ForeignKey("Department")]
         public int? DepartmentId { get; set; } // FK

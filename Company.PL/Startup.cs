@@ -2,10 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
+using Company.DAL.Models;
+using Company.DAL.Contexts;
 using Company.BLL.Interfaces;
 using Company.BLL.Repositories;
-using Company.DAL.Contexts;
-using Company.DAL.Models;
 using Company.PL.MappingProfiles;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
@@ -41,7 +42,7 @@ namespace Company.PL
             services.AddScoped<IDepartmentRepository, DepartmentRepository>(); // Allow Dependency Injection for class DepartmentRepo
             //services.AddScoped<IEmployeeRepository, EmployeeRepository>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
-            services.AddAutoMapper(M => M.AddProfile(new EmployeeProfile()));
+            services.AddAutoMapper(M => M.AddProfiles(new List<Profile>() { new EmployeeProfile(), new UserProfile(), new RoleProfile() }));
 
             services.AddIdentity<ApplicationUser, IdentityRole>(options =>
             {

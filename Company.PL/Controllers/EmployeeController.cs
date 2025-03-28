@@ -54,7 +54,6 @@ namespace Company.PL.Controllers
                 {
 
                     string FileName = DocumentSettings.UploadFile(employeeVM.Image, "Images");
-
                     employeeVM.ImageName = FileName;
 
                     var mappedEmployee = _mapper.Map<EmployeeViewModel, Employee>(employeeVM);

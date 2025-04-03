@@ -4,10 +4,12 @@
     Layout = "~/Views/Shared/_AuthLayout.cshtml";
 }
 
-<div asp-validation-summary="All" class="text-danger"></div>
 <div class="main-agileinfo">
 	<div class="agileits-top">
 		<form asp-action="Login">
+
+			<div asp-validation-summary="All" class="text-danger"></div>
+
 
 			<input asp-for="Email" placeholder="Your Email Address">
 			<span asp-validation-for="Email" class="text-danger"></span>
@@ -27,5 +29,11 @@
 			<input type="submit" value="SIGNIN">
 		</form>
 		<p>Don't Have an Account? <a asp-action="Register"> Sign Up Now </a></p>
+		<br />
+		<p><a asp-action="ForgetPassword"> Forgot your Password? </a></p>
+
 	</div>
 </div>
+@section ValidationScripts {
+	<partial name="_ValidationScriptsPartial">
+}

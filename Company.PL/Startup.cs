@@ -51,7 +51,8 @@ namespace Company.PL
                 options.Password.RequireLowercase = true;
                 options.Password.RequireUppercase = true;
             })
-                        .AddEntityFrameworkStores<CompanyAppDbContext>();
+                        .AddEntityFrameworkStores<CompanyAppDbContext>()
+                        .AddDefaultTokenProviders(); ;
 
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(Options =>
             {

@@ -12,12 +12,15 @@ namespace Company.PL.Controllers
     public class AccountController : Controller
     {
         private readonly SignInManager<ApplicationUser> _signInManager;
+        private readonly IEmailSettings emailSettings;
         private readonly UserManager<ApplicationUser> _userManager;
 
         public AccountController(UserManager<ApplicationUser> userManager,
-                                SignInManager<ApplicationUser> signInManager)
+                                SignInManager<ApplicationUser> signInManager,
+                                IEmailSettings emailSettings)
         {
             _signInManager = signInManager;
+            this.emailSettings = emailSettings;
             _userManager = userManager;
         }
 
@@ -119,7 +122,8 @@ namespace Company.PL.Controllers
                         To = model.Email,
                         Body = ResetPasswordLink
                     };
-                    EmailSettings.SendEmail(email);
+
+                    emailSettings.SendMail(email);
                     return RedirectToAction(nameof(CheckYourInbox));
                 }
                 else

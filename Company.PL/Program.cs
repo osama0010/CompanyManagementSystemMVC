@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Security.Principal;
 using System.Threading.Tasks;
@@ -13,19 +14,24 @@ using Company.DAL.Models;
 using Company.PL.Helpers;
 using Company.PL.MappingProfiles;
 using Company.PL.Settings;
+using Humanizer;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.CodeAnalysis;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.VisualBasic;
 using Microsoft.VisualStudio.Web.CodeGeneration.Design;
 using NuGet.Configuration;
+using Org.BouncyCastle.Asn1.Microsoft;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace Company.PL
@@ -58,15 +64,30 @@ namespace Company.PL
                         .AddEntityFrameworkStores<CompanyAppDbContext>()
                         .AddDefaultTokenProviders(); ;
 
-            Builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(Options =>
-            {
-                Options.LoginPath = "Account/Login";
-                Options.AccessDeniedPath = "Home/Error";
-            });
+            #region Cookie Authentication
+            //builder.services.addauthentication(cookieauthenticationdefaults.authenticationscheme)
+            //.addcookie(options =>
+            //{
+            //    options.loginpath = "account/login";
+            //    options.accessdeniedpath = "home/error";
+            //}); 
+            #endregion
 
             Builder.Services.AddTransient<IEmailSettings, EmailSettings>();
 
             Builder.Services.Configure<MailSettings>(Builder.Configuration.GetSection("MailSettings"));
+
+            Builder.Services.AddAuthentication(O =>
+            {
+                O.DefaultAuthenticateScheme = GoogleDefaults.AuthenticationScheme;
+                O.DefaultChallengeScheme = GoogleDefaults.AuthenticationScheme;
+            }
+            ).AddGoogle(O =>
+            {
+                IConfiguration GoogleAuthSection = Builder.Configuration.GetSection("Authentication:Google");
+                O.ClientId = GoogleAuthSection["ClientID"];
+                O.ClientSecret = GoogleAuthSection["ClientSecret"];
+            });
 
             #endregion
 
@@ -130,6 +151,17 @@ namespace Company.PL
         //5—add js code in employee index page
         #endregion
 
-
-    }
+        #region steps to implement External Login with google
+        //1— open the website
+        //2— open credintals page , add new project
+        //3— open OAuth consent screen , apply user type to be external
+        //4- add app information https://Tocalhost
+        //5— open credinatls, create OAuth client ID
+        //6- in appsettings add client ld, clientSecret
+        //7— install aspnetcore.authentication.google package
+        //8— in program.cs add services
+        //9— in AccountContr011er add google login action add google response action
+        //10— add tink to login using google in sign in view and redirect to the google action
+    #endregion
+}
 }

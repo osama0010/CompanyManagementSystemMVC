@@ -1,10 +1,13 @@
 ﻿using Company.DAL.Models;
 using Company.PL.Helpers;
 using Company.PL.ViewModels;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.Win32;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Company.PL.Controllers
@@ -140,7 +143,6 @@ namespace Company.PL.Controllers
         }
 
         // Reset Password
-
         public IActionResult ResetPassword(string email, string token)
         {
             TempData["email"] = email;
@@ -167,5 +169,32 @@ namespace Company.PL.Controllers
             }
             return View(model);
         }
+
+
+        // Google Login
+        public IActionResult GoogleLogin()
+        {
+            var prop = new AuthenticationProperties
+            {
+                RedirectUri = Url.Action("GoogleResponse")
+            };
+            return Challenge(prop, GoogleDefaults.AuthenticationScheme);
+        }
+
+        public async Task<IActionResult> GoogleResponse()
+        {
+            var result = await HttpContext.AuthenticateAsync(GoogleDefaults.AuthenticationScheme);
+            var claims = result.Principal.Identities.FirstOrDefault().Claims.Select(
+                        claim => new
+                        {
+                            claim.Issuer,
+                            claim.OriginalIssuer,
+                            claim.Value,
+                            claim.Type,
+                        });
+
+            return RedirectToAction("Index", "Home");
+        }
+
     }
 }

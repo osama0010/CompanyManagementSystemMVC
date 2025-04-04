@@ -10,7 +10,6 @@
 
 			<div asp-validation-summary="All" class="text-danger"></div>
 
-
 			<input asp-for="Email" placeholder="Your Email Address">
 			<span asp-validation-for="Email" class="text-danger"></span>
 			<br />
@@ -27,7 +26,12 @@
 				<div class="clear"> </div>
 			</div>
 			<input type="submit" value="SIGNIN">
+
 		</form>
+
+		<p><a asp-action="GoogleLogin">Login With Google</a></p>
+		<br />
+
 		<p>Don't Have an Account? <a asp-action="Register"> Sign Up Now </a></p>
 		<br />
 		<p><a asp-action="ForgetPassword"> Forgot your Password? </a></p>
